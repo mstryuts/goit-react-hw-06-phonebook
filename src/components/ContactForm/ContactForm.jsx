@@ -8,8 +8,6 @@ import { useSelector } from 'react-redux';
 const ContactForm = () => {
   const contacts = useSelector(state => state.contacts);
   // console.log(contacts);
-  const contactInBook = contacts.map(contact => contact.name);
-  console.log(contactInBook);
 
   const dispatch = useDispatch();
   const [name, setName] = useState('');
@@ -26,7 +24,17 @@ const ContactForm = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
-
+    if (contacts.length > 0) {
+      const contactsInPhonebook = [];
+      contacts.forEach(({ name }) =>
+        contactsInPhonebook.push(name.toLowerCase())
+      );
+      if (contactsInPhonebook.includes(name.toLowerCase())) {
+        alert(`${name} is already in contacts.`);
+        reset();
+        return;
+      }
+    }
     dispatch(addContact({ id: nanoid(), name, number }));
     reset();
   };
